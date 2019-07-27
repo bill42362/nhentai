@@ -1,6 +1,6 @@
 #!/bin/bash
 # Program:
-#   This program fetch images by page ids.
+#   This program fetch images by gallery ids.
 
 urlsFilename=fileUrls.txt
 
