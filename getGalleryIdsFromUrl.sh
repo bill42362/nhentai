@@ -21,4 +21,4 @@ for pageSearch in $pageSearches; do
   rm "$page.html"
 done
 
-echo ids: $galleryIds
+echo "$galleryIds"

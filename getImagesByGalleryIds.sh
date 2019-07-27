@@ -2,6 +2,7 @@
 # Program:
 #   This program fetch images by gallery ids.
 
+extsFilename=fileExts.txt
 urlsFilename=fileUrls.txt
 
 dist=dist
@@ -31,18 +32,30 @@ for id in $@; do
   # https://t.nhentai.net/galleries/1200815/1t.jpg
   galleryId=$(echo $trimedHtml | sed 's/\/1t\..*$//g' | sed 's/^.*galleries\///g')
   echo galleryId: $galleryId
-  pageCount=$(echo $trimedHtml | sed 's/pages.*$//g' | sed 's/^.*div>//g')
+  pageCount=$(echo $trimedHtml | sed 's/pages.*$//g' | sed 's/^.*div>//g' | tr -d '[:space:]')
   echo pageCount: $pageCount
   ## https://t.nhentai.net/galleries/1442208/29t.png
   for imageIndex in $(seq 1 $pageCount); do
-    imageExt=$(echo $trimedHtml | sed 's/^.*'"$galleryId"'\/'"$imageIndex"'t\.//g' | sed 's/".*$//g')
     # https://i.nhentai.net/galleries/1200815/3.jpg
+    imageExt=$(echo $trimedHtml | sed 's/^.*'"$galleryId"'\/'"$imageIndex"'t\.//g' | sed 's/".*$//g')
     fileUrl=https://i.nhentai.net/galleries/$galleryId/$imageIndex.$imageExt
     echo "$fileUrl" >> "$urlsFilename"
+    echo "$imageExt" >> "$extsFilename"
   done
 
-  xargs -n 1 curl -O -J < "$urlsFilename"
+  exts=$(sort "$extsFilename")
+  firstExt=$(echo "$exts" | head -n1)
+  lastExt=$(echo "$exts" | tail -n1)
+  if [ "$firstExt" == "$lastExt" ]; then
+    #$mUrl=https://i.nhentai.net/galleries/$galleryId/[1-$pageCount].$firstExt
+    #echo "$mUrl"
+    curl -O -J "https://i.nhentai.net/galleries/$galleryId/[1-$pageCount].$firstExt"
+  else
+    xargs -n 1 curl -O -J < "$urlsFilename"
+  fi
+
   rm "$urlsFilename"
+  rm "$extsFilename"
 
   cd ..
 done

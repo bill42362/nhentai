@@ -1,0 +1,8 @@
+# editor
+.editorconfig
+*.swp
+.vscode
+
+*.DS_Store
+*backup*
+dist
