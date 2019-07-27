@@ -7,6 +7,9 @@ curl -s $1 -o "$tempHtml"
 
 # <a href="?page=1" class="page current">1</a>
 pageSearches=$(grep '^.*<a .*class="page.*<\/a>' "$tempHtml" | sed 's/^.*href="//g' | sed 's/".*$//g')
+if [ "" == "$pageSearches" ]; then
+  pageSearches="?"
+fi
 
 rm "$tempHtml"
 
