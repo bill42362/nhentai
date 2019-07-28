@@ -17,9 +17,9 @@ for id in $@; do
   volHtml=$(curl -s $volUrl)
   trimedHtml=$(echo $volHtml | head -n 1)
 
-  title=$(echo $trimedHtml | sed 's/^.*<h1>//g' | sed 's/<\/h1>.*$//g')
+  title=$(echo $trimedHtml | sed 's/^.*<h1>//g' | sed 's/<\/h1>.*$//g' | tr '\/' '_')
   echo title: $title
-  subTitle=$(echo $trimedHtml | sed 's/<\/h2>.*$//g' | sed 's/^.*<h2>//g')
+  subTitle=$(echo $trimedHtml | sed 's/<\/h2>.*$//g' | sed 's/^.*<h2>//g' | tr '\/' '_')
   echo subTitle: $subTitle
   if [ "More Like This" != "$subTitle" ]; then
     mkdir "$subTitle"
